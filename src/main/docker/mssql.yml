@@ -9,7 +9,7 @@ services:
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_PID=Express
-      - SA_PASSWORD=yourStrong(!)Password
+      - SA_PASSWORD=A_Str0ng_Required_Password
       - MSSQL_DATABASE=warranty-ms
       - MSSQL_SLEEP=60
     # If you want to expose these ports outside your dev PC,
