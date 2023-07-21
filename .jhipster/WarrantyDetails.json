@@ -1,0 +1,46 @@
+{
+  "applications": "*",
+  "changelogDate": "20230721102355",
+  "clientRootFolder": "warranty-ms",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "entityTableName": "warranty_details",
+  "fields": [
+    {
+      "fieldName": "duration",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "coverage",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceContact",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "isReplaceable",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "expiredOn",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "microserviceName": "warranty-ms",
+  "name": "WarrantyDetails",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "warrantyDetails",
+      "relationshipName": "product",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

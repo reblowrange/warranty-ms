@@ -1,0 +1,55 @@
+{
+  "applications": "*",
+  "changelogDate": "20230721102353",
+  "clientRootFolder": "warranty-ms",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "entityTableName": "product",
+  "fields": [
+    {
+      "fieldName": "product",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "billDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "billNumber",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "paidAmount",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "bill",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    }
+  ],
+  "microserviceName": "warranty-ms",
+  "name": "Product",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "seller",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "seller",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    },
+    {
+      "otherEntityName": "warrantyDetails",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "warrantyDetails",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

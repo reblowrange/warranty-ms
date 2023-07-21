@@ -1,0 +1,37 @@
+{
+  "applications": "*",
+  "changelogDate": "20230721102354",
+  "clientRootFolder": "warranty-ms",
+  "databaseType": "sql",
+  "dto": "mapstruct",
+  "entityTableName": "seller",
+  "fields": [
+    {
+      "fieldName": "seller",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "address",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "contact",
+      "fieldType": "Long"
+    }
+  ],
+  "microserviceName": "warranty-ms",
+  "name": "Seller",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "seller",
+      "relationshipName": "product",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}
