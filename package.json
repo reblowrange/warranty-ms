@@ -5,7 +5,7 @@
   "description": "Description for warranty-ms",
   "license": "UNLICENSED",
   "scripts": {
-    "app:start": "./mvnw",
+    "app:start": "mvnw",
     "app:up": "docker compose -f src/main/docker/app.yml up --wait",
     "backend:build-cache": "./mvnw dependency:go-offline",
     "backend:debug": "./mvnw -Dspring-boot.run.jvmArguments=\"-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000\"",

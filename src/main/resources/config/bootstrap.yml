@@ -17,6 +17,7 @@ spring:
         fail-fast: false # if not in "prod" profile, do not force to use Spring Cloud Config
         format: yaml
         profile-separator: '-'
+        enable: true
       discovery:
         tags:
           - profile=${spring.profiles.active}
