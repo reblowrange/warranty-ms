@@ -1,9 +1,7 @@
 package com.warranty.service.dto;
 
-import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -18,17 +16,10 @@ public class ProductDTO implements Serializable {
     private String product;
 
     @NotNull
-    private Instant billDate;
-
-    private String billNumber;
-
-    @NotNull
     private Long paidAmount;
 
-    @Lob
-    private byte[] bill;
+    private String description;
 
-    private String billContentType;
     private SellerDTO seller;
 
     private WarrantyDetailsDTO warrantyDetails;
@@ -49,22 +40,6 @@ public class ProductDTO implements Serializable {
         this.product = product;
     }
 
-    public Instant getBillDate() {
-        return billDate;
-    }
-
-    public void setBillDate(Instant billDate) {
-        this.billDate = billDate;
-    }
-
-    public String getBillNumber() {
-        return billNumber;
-    }
-
-    public void setBillNumber(String billNumber) {
-        this.billNumber = billNumber;
-    }
-
     public Long getPaidAmount() {
         return paidAmount;
     }
@@ -73,20 +48,12 @@ public class ProductDTO implements Serializable {
         this.paidAmount = paidAmount;
     }
 
-    public byte[] getBill() {
-        return bill;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBill(byte[] bill) {
-        this.bill = bill;
-    }
-
-    public String getBillContentType() {
-        return billContentType;
-    }
-
-    public void setBillContentType(String billContentType) {
-        this.billContentType = billContentType;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public SellerDTO getSeller() {
@@ -132,10 +99,8 @@ public class ProductDTO implements Serializable {
         return "ProductDTO{" +
             "id=" + getId() +
             ", product='" + getProduct() + "'" +
-            ", billDate='" + getBillDate() + "'" +
-            ", billNumber='" + getBillNumber() + "'" +
             ", paidAmount=" + getPaidAmount() +
-            ", bill='" + getBill() + "'" +
+            ", description='" + getDescription() + "'" +
             ", seller=" + getSeller() +
             ", warrantyDetails=" + getWarrantyDetails() +
             "}";

@@ -1,6 +1,5 @@
 package com.warranty;
 
-import com.warranty.WarrantyMsApp;
 import com.warranty.config.AsyncSyncConfiguration;
 import com.warranty.config.EmbeddedSQL;
 import java.lang.annotation.ElementType;

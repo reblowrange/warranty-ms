@@ -1,5 +1,7 @@
 package com.warranty.service.dto;
 
+import com.warranty.domain.enumeration.DurationType;
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -14,16 +16,28 @@ public class WarrantyDetailsDTO implements Serializable {
     private Long id;
 
     @NotNull
-    private Long duration;
+    private Instant billDate;
 
-    private String coverage;
+    private String billNumber;
 
-    private Long serviceContact;
+    @NotNull
+    private Integer duration;
+
+    @NotNull
+    private DurationType durationType;
+
+    @Pattern(regexp = "^[0-9]{10}$")
+    private String serviceContact;
 
     private Boolean isReplaceable;
 
     @NotNull
     private Instant expiredOn;
+
+    @Lob
+    private byte[] bill;
+
+    private String billContentType;
 
     public Long getId() {
         return id;
@@ -33,27 +47,43 @@ public class WarrantyDetailsDTO implements Serializable {
         this.id = id;
     }
 
-    public Long getDuration() {
+    public Instant getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(Instant billDate) {
+        this.billDate = billDate;
+    }
+
+    public String getBillNumber() {
+        return billNumber;
+    }
+
+    public void setBillNumber(String billNumber) {
+        this.billNumber = billNumber;
+    }
+
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(Long duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
-    public String getCoverage() {
-        return coverage;
+    public DurationType getDurationType() {
+        return durationType;
     }
 
-    public void setCoverage(String coverage) {
-        this.coverage = coverage;
+    public void setDurationType(DurationType durationType) {
+        this.durationType = durationType;
     }
 
-    public Long getServiceContact() {
+    public String getServiceContact() {
         return serviceContact;
     }
 
-    public void setServiceContact(Long serviceContact) {
+    public void setServiceContact(String serviceContact) {
         this.serviceContact = serviceContact;
     }
 
@@ -71,6 +101,22 @@ public class WarrantyDetailsDTO implements Serializable {
 
     public void setExpiredOn(Instant expiredOn) {
         this.expiredOn = expiredOn;
+    }
+
+    public byte[] getBill() {
+        return bill;
+    }
+
+    public void setBill(byte[] bill) {
+        this.bill = bill;
+    }
+
+    public String getBillContentType() {
+        return billContentType;
+    }
+
+    public void setBillContentType(String billContentType) {
+        this.billContentType = billContentType;
     }
 
     @Override
@@ -99,11 +145,14 @@ public class WarrantyDetailsDTO implements Serializable {
     public String toString() {
         return "WarrantyDetailsDTO{" +
             "id=" + getId() +
+            ", billDate='" + getBillDate() + "'" +
+            ", billNumber='" + getBillNumber() + "'" +
             ", duration=" + getDuration() +
-            ", coverage='" + getCoverage() + "'" +
-            ", serviceContact=" + getServiceContact() +
+            ", durationType='" + getDurationType() + "'" +
+            ", serviceContact='" + getServiceContact() + "'" +
             ", isReplaceable='" + getIsReplaceable() + "'" +
             ", expiredOn='" + getExpiredOn() + "'" +
+            ", bill='" + getBill() + "'" +
             "}";
     }
 }

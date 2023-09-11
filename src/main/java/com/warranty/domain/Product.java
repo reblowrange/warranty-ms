@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -30,22 +29,11 @@ public class Product implements Serializable {
     private String product;
 
     @NotNull
-    @Column(name = "bill_date", nullable = false)
-    private Instant billDate;
-
-    @Column(name = "bill_number")
-    private String billNumber;
-
-    @NotNull
     @Column(name = "paid_amount", nullable = false)
     private Long paidAmount;
 
-    @Lob
-    @Column(name = "bill")
-    private byte[] bill;
-
-    @Column(name = "bill_content_type")
-    private String billContentType;
+    @Column(name = "description")
+    private String description;
 
     @JsonIgnoreProperties(value = { "product" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
@@ -85,32 +73,6 @@ public class Product implements Serializable {
         this.product = product;
     }
 
-    public Instant getBillDate() {
-        return this.billDate;
-    }
-
-    public Product billDate(Instant billDate) {
-        this.setBillDate(billDate);
-        return this;
-    }
-
-    public void setBillDate(Instant billDate) {
-        this.billDate = billDate;
-    }
-
-    public String getBillNumber() {
-        return this.billNumber;
-    }
-
-    public Product billNumber(String billNumber) {
-        this.setBillNumber(billNumber);
-        return this;
-    }
-
-    public void setBillNumber(String billNumber) {
-        this.billNumber = billNumber;
-    }
-
     public Long getPaidAmount() {
         return this.paidAmount;
     }
@@ -124,30 +86,17 @@ public class Product implements Serializable {
         this.paidAmount = paidAmount;
     }
 
-    public byte[] getBill() {
-        return this.bill;
+    public String getDescription() {
+        return this.description;
     }
 
-    public Product bill(byte[] bill) {
-        this.setBill(bill);
+    public Product description(String description) {
+        this.setDescription(description);
         return this;
     }
 
-    public void setBill(byte[] bill) {
-        this.bill = bill;
-    }
-
-    public String getBillContentType() {
-        return this.billContentType;
-    }
-
-    public Product billContentType(String billContentType) {
-        this.billContentType = billContentType;
-        return this;
-    }
-
-    public void setBillContentType(String billContentType) {
-        this.billContentType = billContentType;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Seller getSeller() {
@@ -201,11 +150,8 @@ public class Product implements Serializable {
         return "Product{" +
             "id=" + getId() +
             ", product='" + getProduct() + "'" +
-            ", billDate='" + getBillDate() + "'" +
-            ", billNumber='" + getBillNumber() + "'" +
             ", paidAmount=" + getPaidAmount() +
-            ", bill='" + getBill() + "'" +
-            ", billContentType='" + getBillContentType() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

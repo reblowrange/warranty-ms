@@ -12,23 +12,13 @@
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "billDate",
-      "fieldType": "Instant",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "billNumber",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "paidAmount",
       "fieldType": "Long",
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "bill",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "any"
+      "fieldName": "description",
+      "fieldType": "String"
     }
   ],
   "microserviceName": "warranty-ms",

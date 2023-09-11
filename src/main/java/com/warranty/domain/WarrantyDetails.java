@@ -1,6 +1,7 @@
 package com.warranty.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.warranty.domain.enumeration.DurationType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
@@ -26,14 +27,24 @@ public class WarrantyDetails implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "bill_date", nullable = false)
+    private Instant billDate;
+
+    @Column(name = "bill_number")
+    private String billNumber;
+
+    @NotNull
     @Column(name = "duration", nullable = false)
-    private Long duration;
+    private Integer duration;
 
-    @Column(name = "coverage")
-    private String coverage;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "duration_type", nullable = false)
+    private DurationType durationType;
 
+    @Pattern(regexp = "^[0-9]{10}$")
     @Column(name = "service_contact")
-    private Long serviceContact;
+    private String serviceContact;
 
     @Column(name = "is_replaceable")
     private Boolean isReplaceable;
@@ -41,6 +52,13 @@ public class WarrantyDetails implements Serializable {
     @NotNull
     @Column(name = "expired_on", nullable = false)
     private Instant expiredOn;
+
+    @Lob
+    @Column(name = "bill")
+    private byte[] bill;
+
+    @Column(name = "bill_content_type")
+    private String billContentType;
 
     @JsonIgnoreProperties(value = { "seller", "warrantyDetails" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "warrantyDetails")
@@ -61,42 +79,68 @@ public class WarrantyDetails implements Serializable {
         this.id = id;
     }
 
-    public Long getDuration() {
+    public Instant getBillDate() {
+        return this.billDate;
+    }
+
+    public WarrantyDetails billDate(Instant billDate) {
+        this.setBillDate(billDate);
+        return this;
+    }
+
+    public void setBillDate(Instant billDate) {
+        this.billDate = billDate;
+    }
+
+    public String getBillNumber() {
+        return this.billNumber;
+    }
+
+    public WarrantyDetails billNumber(String billNumber) {
+        this.setBillNumber(billNumber);
+        return this;
+    }
+
+    public void setBillNumber(String billNumber) {
+        this.billNumber = billNumber;
+    }
+
+    public Integer getDuration() {
         return this.duration;
     }
 
-    public WarrantyDetails duration(Long duration) {
+    public WarrantyDetails duration(Integer duration) {
         this.setDuration(duration);
         return this;
     }
 
-    public void setDuration(Long duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
-    public String getCoverage() {
-        return this.coverage;
+    public DurationType getDurationType() {
+        return this.durationType;
     }
 
-    public WarrantyDetails coverage(String coverage) {
-        this.setCoverage(coverage);
+    public WarrantyDetails durationType(DurationType durationType) {
+        this.setDurationType(durationType);
         return this;
     }
 
-    public void setCoverage(String coverage) {
-        this.coverage = coverage;
+    public void setDurationType(DurationType durationType) {
+        this.durationType = durationType;
     }
 
-    public Long getServiceContact() {
+    public String getServiceContact() {
         return this.serviceContact;
     }
 
-    public WarrantyDetails serviceContact(Long serviceContact) {
+    public WarrantyDetails serviceContact(String serviceContact) {
         this.setServiceContact(serviceContact);
         return this;
     }
 
-    public void setServiceContact(Long serviceContact) {
+    public void setServiceContact(String serviceContact) {
         this.serviceContact = serviceContact;
     }
 
@@ -124,6 +168,32 @@ public class WarrantyDetails implements Serializable {
 
     public void setExpiredOn(Instant expiredOn) {
         this.expiredOn = expiredOn;
+    }
+
+    public byte[] getBill() {
+        return this.bill;
+    }
+
+    public WarrantyDetails bill(byte[] bill) {
+        this.setBill(bill);
+        return this;
+    }
+
+    public void setBill(byte[] bill) {
+        this.bill = bill;
+    }
+
+    public String getBillContentType() {
+        return this.billContentType;
+    }
+
+    public WarrantyDetails billContentType(String billContentType) {
+        this.billContentType = billContentType;
+        return this;
+    }
+
+    public void setBillContentType(String billContentType) {
+        this.billContentType = billContentType;
     }
 
     public Product getProduct() {
@@ -169,11 +239,15 @@ public class WarrantyDetails implements Serializable {
     public String toString() {
         return "WarrantyDetails{" +
             "id=" + getId() +
+            ", billDate='" + getBillDate() + "'" +
+            ", billNumber='" + getBillNumber() + "'" +
             ", duration=" + getDuration() +
-            ", coverage='" + getCoverage() + "'" +
-            ", serviceContact=" + getServiceContact() +
+            ", durationType='" + getDurationType() + "'" +
+            ", serviceContact='" + getServiceContact() + "'" +
             ", isReplaceable='" + getIsReplaceable() + "'" +
             ", expiredOn='" + getExpiredOn() + "'" +
+            ", bill='" + getBill() + "'" +
+            ", billContentType='" + getBillContentType() + "'" +
             "}";
     }
 }

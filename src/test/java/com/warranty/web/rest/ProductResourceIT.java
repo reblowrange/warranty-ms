@@ -11,8 +11,6 @@ import com.warranty.repository.ProductRepository;
 import com.warranty.service.dto.ProductDTO;
 import com.warranty.service.mapper.ProductMapper;
 import jakarta.persistence.EntityManager;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link ProductResource} REST controller.
@@ -37,19 +34,11 @@ class ProductResourceIT {
     private static final String DEFAULT_PRODUCT = "AAAAAAAAAA";
     private static final String UPDATED_PRODUCT = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_BILL_DATE = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_BILL_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
-
-    private static final String DEFAULT_BILL_NUMBER = "AAAAAAAAAA";
-    private static final String UPDATED_BILL_NUMBER = "BBBBBBBBBB";
-
     private static final Long DEFAULT_PAID_AMOUNT = 1L;
     private static final Long UPDATED_PAID_AMOUNT = 2L;
 
-    private static final byte[] DEFAULT_BILL = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_BILL = TestUtil.createByteArray(1, "1");
-    private static final String DEFAULT_BILL_CONTENT_TYPE = "image/jpg";
-    private static final String UPDATED_BILL_CONTENT_TYPE = "image/png";
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/products";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -78,13 +67,7 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createEntity(EntityManager em) {
-        Product product = new Product()
-            .product(DEFAULT_PRODUCT)
-            .billDate(DEFAULT_BILL_DATE)
-            .billNumber(DEFAULT_BILL_NUMBER)
-            .paidAmount(DEFAULT_PAID_AMOUNT)
-            .bill(DEFAULT_BILL)
-            .billContentType(DEFAULT_BILL_CONTENT_TYPE);
+        Product product = new Product().product(DEFAULT_PRODUCT).paidAmount(DEFAULT_PAID_AMOUNT).description(DEFAULT_DESCRIPTION);
         return product;
     }
 
@@ -95,13 +78,7 @@ class ProductResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Product createUpdatedEntity(EntityManager em) {
-        Product product = new Product()
-            .product(UPDATED_PRODUCT)
-            .billDate(UPDATED_BILL_DATE)
-            .billNumber(UPDATED_BILL_NUMBER)
-            .paidAmount(UPDATED_PAID_AMOUNT)
-            .bill(UPDATED_BILL)
-            .billContentType(UPDATED_BILL_CONTENT_TYPE);
+        Product product = new Product().product(UPDATED_PRODUCT).paidAmount(UPDATED_PAID_AMOUNT).description(UPDATED_DESCRIPTION);
         return product;
     }
 
@@ -125,11 +102,8 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeCreate + 1);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getProduct()).isEqualTo(DEFAULT_PRODUCT);
-        assertThat(testProduct.getBillDate()).isEqualTo(DEFAULT_BILL_DATE);
-        assertThat(testProduct.getBillNumber()).isEqualTo(DEFAULT_BILL_NUMBER);
         assertThat(testProduct.getPaidAmount()).isEqualTo(DEFAULT_PAID_AMOUNT);
-        assertThat(testProduct.getBill()).isEqualTo(DEFAULT_BILL);
-        assertThat(testProduct.getBillContentType()).isEqualTo(DEFAULT_BILL_CONTENT_TYPE);
+        assertThat(testProduct.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -157,24 +131,6 @@ class ProductResourceIT {
         int databaseSizeBeforeTest = productRepository.findAll().size();
         // set the field null
         product.setProduct(null);
-
-        // Create the Product, which fails.
-        ProductDTO productDTO = productMapper.toDto(product);
-
-        restProductMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Product> productList = productRepository.findAll();
-        assertThat(productList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    void checkBillDateIsRequired() throws Exception {
-        int databaseSizeBeforeTest = productRepository.findAll().size();
-        // set the field null
-        product.setBillDate(null);
 
         // Create the Product, which fails.
         ProductDTO productDTO = productMapper.toDto(product);
@@ -218,11 +174,8 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(product.getId().intValue())))
             .andExpect(jsonPath("$.[*].product").value(hasItem(DEFAULT_PRODUCT)))
-            .andExpect(jsonPath("$.[*].billDate").value(hasItem(DEFAULT_BILL_DATE.toString())))
-            .andExpect(jsonPath("$.[*].billNumber").value(hasItem(DEFAULT_BILL_NUMBER)))
             .andExpect(jsonPath("$.[*].paidAmount").value(hasItem(DEFAULT_PAID_AMOUNT.intValue())))
-            .andExpect(jsonPath("$.[*].billContentType").value(hasItem(DEFAULT_BILL_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].bill").value(hasItem(Base64Utils.encodeToString(DEFAULT_BILL))));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
 
     @Test
@@ -238,11 +191,8 @@ class ProductResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(product.getId().intValue()))
             .andExpect(jsonPath("$.product").value(DEFAULT_PRODUCT))
-            .andExpect(jsonPath("$.billDate").value(DEFAULT_BILL_DATE.toString()))
-            .andExpect(jsonPath("$.billNumber").value(DEFAULT_BILL_NUMBER))
             .andExpect(jsonPath("$.paidAmount").value(DEFAULT_PAID_AMOUNT.intValue()))
-            .andExpect(jsonPath("$.billContentType").value(DEFAULT_BILL_CONTENT_TYPE))
-            .andExpect(jsonPath("$.bill").value(Base64Utils.encodeToString(DEFAULT_BILL)));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
 
     @Test
@@ -264,13 +214,7 @@ class ProductResourceIT {
         Product updatedProduct = productRepository.findById(product.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedProduct are not directly saved in db
         em.detach(updatedProduct);
-        updatedProduct
-            .product(UPDATED_PRODUCT)
-            .billDate(UPDATED_BILL_DATE)
-            .billNumber(UPDATED_BILL_NUMBER)
-            .paidAmount(UPDATED_PAID_AMOUNT)
-            .bill(UPDATED_BILL)
-            .billContentType(UPDATED_BILL_CONTENT_TYPE);
+        updatedProduct.product(UPDATED_PRODUCT).paidAmount(UPDATED_PAID_AMOUNT).description(UPDATED_DESCRIPTION);
         ProductDTO productDTO = productMapper.toDto(updatedProduct);
 
         restProductMockMvc
@@ -286,11 +230,8 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeUpdate);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getProduct()).isEqualTo(UPDATED_PRODUCT);
-        assertThat(testProduct.getBillDate()).isEqualTo(UPDATED_BILL_DATE);
-        assertThat(testProduct.getBillNumber()).isEqualTo(UPDATED_BILL_NUMBER);
         assertThat(testProduct.getPaidAmount()).isEqualTo(UPDATED_PAID_AMOUNT);
-        assertThat(testProduct.getBill()).isEqualTo(UPDATED_BILL);
-        assertThat(testProduct.getBillContentType()).isEqualTo(UPDATED_BILL_CONTENT_TYPE);
+        assertThat(testProduct.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test
@@ -370,7 +311,7 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
-        partialUpdatedProduct.product(UPDATED_PRODUCT).paidAmount(UPDATED_PAID_AMOUNT);
+        partialUpdatedProduct.product(UPDATED_PRODUCT);
 
         restProductMockMvc
             .perform(
@@ -385,11 +326,8 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeUpdate);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getProduct()).isEqualTo(UPDATED_PRODUCT);
-        assertThat(testProduct.getBillDate()).isEqualTo(DEFAULT_BILL_DATE);
-        assertThat(testProduct.getBillNumber()).isEqualTo(DEFAULT_BILL_NUMBER);
-        assertThat(testProduct.getPaidAmount()).isEqualTo(UPDATED_PAID_AMOUNT);
-        assertThat(testProduct.getBill()).isEqualTo(DEFAULT_BILL);
-        assertThat(testProduct.getBillContentType()).isEqualTo(DEFAULT_BILL_CONTENT_TYPE);
+        assertThat(testProduct.getPaidAmount()).isEqualTo(DEFAULT_PAID_AMOUNT);
+        assertThat(testProduct.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -404,13 +342,7 @@ class ProductResourceIT {
         Product partialUpdatedProduct = new Product();
         partialUpdatedProduct.setId(product.getId());
 
-        partialUpdatedProduct
-            .product(UPDATED_PRODUCT)
-            .billDate(UPDATED_BILL_DATE)
-            .billNumber(UPDATED_BILL_NUMBER)
-            .paidAmount(UPDATED_PAID_AMOUNT)
-            .bill(UPDATED_BILL)
-            .billContentType(UPDATED_BILL_CONTENT_TYPE);
+        partialUpdatedProduct.product(UPDATED_PRODUCT).paidAmount(UPDATED_PAID_AMOUNT).description(UPDATED_DESCRIPTION);
 
         restProductMockMvc
             .perform(
@@ -425,11 +357,8 @@ class ProductResourceIT {
         assertThat(productList).hasSize(databaseSizeBeforeUpdate);
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getProduct()).isEqualTo(UPDATED_PRODUCT);
-        assertThat(testProduct.getBillDate()).isEqualTo(UPDATED_BILL_DATE);
-        assertThat(testProduct.getBillNumber()).isEqualTo(UPDATED_BILL_NUMBER);
         assertThat(testProduct.getPaidAmount()).isEqualTo(UPDATED_PAID_AMOUNT);
-        assertThat(testProduct.getBill()).isEqualTo(UPDATED_BILL);
-        assertThat(testProduct.getBillContentType()).isEqualTo(UPDATED_BILL_CONTENT_TYPE);
+        assertThat(testProduct.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

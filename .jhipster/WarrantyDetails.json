@@ -7,17 +7,30 @@
   "entityTableName": "warranty_details",
   "fields": [
     {
-      "fieldName": "duration",
-      "fieldType": "Long",
+      "fieldName": "billDate",
+      "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     },
     {
-      "fieldName": "coverage",
+      "fieldName": "billNumber",
       "fieldType": "String"
     },
     {
+      "fieldName": "duration",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "durationType",
+      "fieldType": "DurationType",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "DAYS,MONTHS,YEARS"
+    },
+    {
       "fieldName": "serviceContact",
-      "fieldType": "Long"
+      "fieldType": "String",
+      "fieldValidateRules": ["pattern"],
+      "fieldValidateRulesPattern": "^[0-9]{10}$"
     },
     {
       "fieldName": "isReplaceable",
@@ -27,6 +40,11 @@
       "fieldName": "expiredOn",
       "fieldType": "Instant",
       "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "bill",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
     }
   ],
   "microserviceName": "warranty-ms",
